@@ -6,18 +6,18 @@
 static const int kCombTunings[8]   = { 1116, 1188, 1277, 1356, 1422, 1491, 1557, 1617 };
 static const int kAllpassTunings[4] = { 556,  441,  341,  225  };
 
-JuiceGangProcessor::JuiceGangProcessor()
+JuiceFilterProcessor::JuiceFilterProcessor()
     : AudioProcessor (BusesProperties()
           .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
           .withOutput ("Output", juce::AudioChannelSet::stereo(), true)),
-      apvts (*this, nullptr, "JuiceGang", createParameterLayout())
+      apvts (*this, nullptr, "JuiceFilter", createParameterLayout())
 {
 }
 
-JuiceGangProcessor::~JuiceGangProcessor() {}
+JuiceFilterProcessor::~JuiceFilterProcessor() {}
 
 // ─────────────────────────────────────────────────────────────────────────────
-juce::AudioProcessorValueTreeState::ParameterLayout JuiceGangProcessor::createParameterLayout()
+juce::AudioProcessorValueTreeState::ParameterLayout JuiceFilterProcessor::createParameterLayout()
 {
     std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
 
@@ -81,7 +81,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout JuiceGangProcessor::createPa
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-void JuiceGangProcessor::prepareToPlay (double sr, int block)
+void JuiceFilterProcessor::prepareToPlay (double sr, int block)
 {
     sampleRate = sr;
 
@@ -140,7 +140,7 @@ void JuiceGangProcessor::prepareToPlay (double sr, int block)
         decodeVoiceTag (sr);
 }
 
-void JuiceGangProcessor::decodeVoiceTag (double sr)
+void JuiceFilterProcessor::decodeVoiceTag (double sr)
 {
     tagDecoded = true;
     tagPlayPos = 0;
@@ -194,16 +194,16 @@ void JuiceGangProcessor::decodeVoiceTag (double sr)
     }
 }
 
-void JuiceGangProcessor::releaseResources() {}
+void JuiceFilterProcessor::releaseResources() {}
 
-bool JuiceGangProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool JuiceFilterProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
     return layouts.getMainOutputChannelSet() == juce::AudioChannelSet::stereo() &&
            layouts.getMainInputChannelSet()  == juce::AudioChannelSet::stereo();
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-float JuiceGangProcessor::getLFOValue (int shape)
+float JuiceFilterProcessor::getLFOValue (int shape)
 {
     switch (shape) {
         case 1: return 1.f - 4.f * std::abs (lfoPhase - 0.5f); // triangle
@@ -213,7 +213,7 @@ float JuiceGangProcessor::getLFOValue (int shape)
     }
 }
 
-float JuiceGangProcessor::tempoSyncedSeconds (int divIndex, double bpm) const
+float JuiceFilterProcessor::tempoSyncedSeconds (int divIndex, double bpm) const
 {
     double beat = 60.0 / bpm;
     switch (divIndex) {
@@ -226,7 +226,7 @@ float JuiceGangProcessor::tempoSyncedSeconds (int divIndex, double bpm) const
     }
 }
 
-void JuiceGangProcessor::updateReverbEQ()
+void JuiceFilterProcessor::updateReverbEQ()
 {
     float lowCut   = *apvts.getRawParameterValue ("revLowCut");
     float lowShelf = *apvts.getRawParameterValue ("revLowShelf");
@@ -248,7 +248,7 @@ void JuiceGangProcessor::updateReverbEQ()
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-void JuiceGangProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
+void JuiceFilterProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer&)
 {
     juce::ScopedNoDenormals noDenormals;
 
@@ -526,28 +526,28 @@ void JuiceGangProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::M
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-void JuiceGangProcessor::getStateInformation (juce::MemoryBlock& destData)
+void JuiceFilterProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
 
-void JuiceGangProcessor::setStateInformation (const void* data, int sizeInBytes)
+void JuiceFilterProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     std::unique_ptr<juce::XmlElement> xml (getXmlFromBinary (data, sizeInBytes));
     if (xml && xml->hasTagName (apvts.state.getType()))
         apvts.replaceState (juce::ValueTree::fromXml (*xml));
 }
 
-juce::AudioProcessorEditor* JuiceGangProcessor::createEditor()
+juce::AudioProcessorEditor* JuiceFilterProcessor::createEditor()
 {
-    return new JuiceGangEditor (*this);
+    return new JuiceFilterEditor (*this);
 }
 
-bool JuiceGangProcessor::hasEditor() const { return true; }
+bool JuiceFilterProcessor::hasEditor() const { return true; }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new JuiceGangProcessor();
+    return new JuiceFilterProcessor();
 }

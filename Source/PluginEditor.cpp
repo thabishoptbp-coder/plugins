@@ -219,7 +219,7 @@ void DelayVisualizer::paint (juce::Graphics& g)
 }
 
 // ─── Editor ──────────────────────────────────────────────────────────────────
-JuiceGangEditor::JuiceGangEditor (JuiceGangProcessor& p)
+JuiceFilterEditor::JuiceFilterEditor (JuiceFilterProcessor& p)
     : AudioProcessorEditor (&p), proc (p), filterCurve (p.apvts), reverbEQCurve (p.apvts)
 {
     setSize (720, 580);
@@ -438,9 +438,9 @@ JuiceGangEditor::JuiceGangEditor (JuiceGangProcessor& p)
     startTimerHz (30);
 }
 
-JuiceGangEditor::~JuiceGangEditor() { setLookAndFeel (nullptr); }
+JuiceFilterEditor::~JuiceFilterEditor() { setLookAndFeel (nullptr); }
 
-void JuiceGangEditor::mouseDown (const juce::MouseEvent& e)
+void JuiceFilterEditor::mouseDown (const juce::MouseEvent& e)
 {
     // Straw hit area — gable-top-left zone
     juce::Rectangle<int> strawHit (30, 0, 120, 78);
@@ -450,7 +450,7 @@ void JuiceGangEditor::mouseDown (const juce::MouseEvent& e)
     }
 }
 
-void JuiceGangEditor::timerCallback()
+void JuiceFilterEditor::timerCallback()
 {
     vuMeter.setLevel (proc.getOutputLevel());
     vuMeter.repaint();
@@ -519,7 +519,7 @@ void JuiceGangEditor::timerCallback()
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-void JuiceGangEditor::paint (juce::Graphics& g)
+void JuiceFilterEditor::paint (juce::Graphics& g)
 {
     const float W = (float)getWidth(), H = (float)getHeight();
     // Layout constants — compact 720×580
@@ -670,7 +670,7 @@ void JuiceGangEditor::paint (juce::Graphics& g)
         -juce::MathConstants<float>::halfPi, sideW * 0.5f, midSideY));
     g.setColour (juce::Colours::white.withAlpha (0.5f));
     g.setFont (juce::Font (8.f, juce::Font::bold));
-    g.drawText ("JUICE GANG", (int)(sideW * 0.5f - 42.f), (int)midSideY - 5, 84, 12,
+    g.drawText ("JUICE FILTER", (int)(sideW * 0.5f - 42.f), (int)midSideY - 5, 84, 12,
                 juce::Justification::centred);
     g.restoreState();
 
@@ -860,7 +860,7 @@ void JuiceGangEditor::paint (juce::Graphics& g)
     }
 }
 
-void JuiceGangEditor::resized()
+void JuiceFilterEditor::resized()
 {
     const int W = getWidth(), H = getHeight();
 

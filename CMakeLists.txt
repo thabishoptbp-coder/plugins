@@ -11,7 +11,7 @@ if(APPLE)
     set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "" FORCE)
 endif()
 
-project(JuiceGang VERSION 1.0.0)
+project(JuiceFilter VERSION 1.0.0)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -21,7 +21,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(juce)
 
-set(PLUGIN_TARGET JuiceGang)
+set(PLUGIN_TARGET JuiceFilter)
 
 if(WIN32)
     set(PLUGIN_FORMATS VST3 Standalone)
@@ -34,9 +34,9 @@ endif()
 juce_add_plugin(${PLUGIN_TARGET}
     COMPANY_NAME                "Nova Audio"
     PLUGIN_MANUFACTURER_CODE    "NvAu"
-    PLUGIN_CODE                 "JcGg"
+    PLUGIN_CODE                 "JcFl"
     FORMATS                     ${PLUGIN_FORMATS}
-    PRODUCT_NAME                "Juice Gang"
+    PRODUCT_NAME                "Juice Filter"
     IS_SYNTH                    FALSE
     NEEDS_MIDI_INPUT            FALSE
     NEEDS_MIDI_OUTPUT           FALSE
@@ -46,7 +46,7 @@ juce_add_plugin(${PLUGIN_TARGET}
     VST3_CATEGORIES             "Fx" "Filter"
 )
 
-juce_add_binary_data(JuiceGangBinaryData
+juce_add_binary_data(JuiceFilterBinaryData
     SOURCES
         Source/JuiceTag.m4a
 )
@@ -61,7 +61,7 @@ target_include_directories(${PLUGIN_TARGET} PRIVATE Source)
 
 target_link_libraries(${PLUGIN_TARGET}
     PRIVATE
-        JuiceGangBinaryData
+        JuiceFilterBinaryData
         juce::juce_audio_basics
         juce::juce_audio_devices
         juce::juce_audio_formats

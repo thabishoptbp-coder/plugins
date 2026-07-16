@@ -4,11 +4,11 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
-// ─── Juice Gang knob look and feel ──────────────────────────────────────────
-class JGLookAndFeel : public juce::LookAndFeel_V4
+// ─── Juice Filter knob look and feel ──────────────────────────────────────────
+class JFLookAndFeel : public juce::LookAndFeel_V4
 {
 public:
-    JGLookAndFeel()
+    JFLookAndFeel()
     {
         setColour (juce::Slider::thumbColourId,           juce::Colour (0xff6a0dad));
         setColour (juce::Slider::rotarySliderFillColourId, juce::Colour (0xff39e65a));
@@ -240,7 +240,7 @@ public:
         g.fillRect (0.f, 30.f, (float)getWidth(), 18.f);
         g.setColour (juce::Colour (0xff39e65a));
         g.setFont (juce::Font (18.f, juce::Font::bold | juce::Font::italic));
-        g.drawText ("🧃 JUICE GANG — Flavor Browser", 16, 10, getWidth() - 64, 28, juce::Justification::centredLeft);
+        g.drawText ("🧃 JUICE FILTER — Flavor Browser", 16, 10, getWidth() - 64, 28, juce::Justification::centredLeft);
         // Close button
         g.setColour (juce::Colours::white.withAlpha (0.5f));
         g.setFont (juce::Font (16.f, juce::Font::bold));
@@ -408,19 +408,19 @@ private:
 };
 
 // ─── Main Editor ─────────────────────────────────────────────────────────────
-class JuiceGangEditor : public juce::AudioProcessorEditor, public juce::Timer
+class JuiceFilterEditor : public juce::AudioProcessorEditor, public juce::Timer
 {
 public:
-    explicit JuiceGangEditor (JuiceGangProcessor&);
-    ~JuiceGangEditor() override;
+    explicit JuiceFilterEditor (JuiceFilterProcessor&);
+    ~JuiceFilterEditor() override;
     void paint (juce::Graphics&) override;
     void resized() override;
     void timerCallback() override;
     void mouseDown (const juce::MouseEvent& e) override;
 
 private:
-    JuiceGangProcessor& proc;
-    JGLookAndFeel laf;
+    JuiceFilterProcessor& proc;
+    JFLookAndFeel laf;
 
     // Helper: make a labelled knob group
     void addKnob (juce::Slider& s, juce::Label& lbl, const juce::String& text,
@@ -501,5 +501,5 @@ private:
 
     float strawDroop = 0.f;  // 0 = upright (active), 1 = drooped (bypassed)
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuiceGangEditor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuiceFilterEditor)
 };

@@ -6,11 +6,11 @@
 #include <array>
 #include <atomic>
 
-class JuiceGangProcessor : public juce::AudioProcessor
+class JuiceFilterProcessor : public juce::AudioProcessor
 {
 public:
-    JuiceGangProcessor();
-    ~JuiceGangProcessor() override;
+    JuiceFilterProcessor();
+    ~JuiceFilterProcessor() override;
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
@@ -20,7 +20,7 @@ public:
 
     juce::AudioProcessorEditor* createEditor() override;
     bool hasEditor() const override;
-    const juce::String getName() const override { return "Juice Gang"; }
+    const juce::String getName() const override { return "Juice Filter"; }
     bool acceptsMidi() const override { return false; }
     bool producesMidi() const override { return false; }
     bool isMidiEffect() const override { return false; }
@@ -139,5 +139,5 @@ private:
     float getLFOValue (int shape);
     float tempoSyncedSeconds (int divIndex, double bpm) const;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuiceGangProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JuiceFilterProcessor)
 };
